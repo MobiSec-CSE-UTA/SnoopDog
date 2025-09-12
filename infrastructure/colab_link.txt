@@ -1,0 +1,6 @@
+google colab link to test Snoopdog without required hardwares
+Colab codes we provided will clone SnoopDog github into Colab disk and run test code with recorded Raw EM signal.
+here is the link
+
+https://colab.research.google.com/drive/1Ihqmfy38Gr5L7T8ora8yWzIDwW8D2uRG?usp=sharing
+

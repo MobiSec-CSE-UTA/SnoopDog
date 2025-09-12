@@ -1,0 +1,23 @@
+For benign device 1
+target data file to load =  ./recorded_data/benign1.data
+8 fold record data has been loaded.
+Detection result : False
+    DTW distance: 5.0 
+
+For benign device 2
+target data file to load =  ./recorded_data/benign2.data
+8 fold record data has been loaded.
+Detection result : False
+    DTW distance: 5.0 
+
+For malicious sniffer 1
+target data file to load =  ./recorded_data/malicious1.data
+8 fold record data has been loaded.
+Detection result : True
+    DTW distance: 0.0 
+
+For malicious sniffer 2
+target data file to load =  ./recorded_data/malicious2.data
+8 fold record data has been loaded.
+Detection result : True
+    DTW distance: 0.0 
