@@ -220,25 +220,25 @@ Follow these instructions **only if your PC cannot recognize the RPi.**
 
 The detector should be recognized as a network interface when it is attached to Host PC.
 
-Please follow the diagram above to connect the detector, a hub and Host PC.
+Please follow the diagram above to connect the detector, a USB hub and Host PC.
 
 ## Run SnoopDog to detect a malicious sniffer
 
-after plug the detector to a hub.
-1. figuer out the ipaddress of Host PC
+Upon connecting the detector & hub,
+1. Locate the ipaddress of Host PC
 ```txt
-for Windoes, open powershell or CMD and use 'ipconfig'
-for linux and Mac, open terminal and use 'ifconfig'
+for Windows, open Powershell/CMD → 'ipconfig'
+for linux and Mac, open terminal → 'ifconfig'
 ```
 If the SnoopDog detector is properly recognized, then your Host PC optains an ip address from the detector.
-The ipaddress should be 192.168.7.xxx, xxx is a last digits in the ip address for Host PC
+The ipaddress should be 192.168.7.xxx, the 'xxx' octet represents the Host PC
 
 2. Run snoopdog server on Host PC
 ```bash
 python server.py -p 5050
 ```
 
-3. Open terminal and access to the detector using ssh.
+3. Open terminal and connect to the detector using ssh.
 ```bash
 ssh snoopdog@192.168.7.2
 ```
@@ -248,17 +248,17 @@ the password is 'raspberry'
 ```bash
 python ./snoopdog_detector.py -i 192.168.7.<replace with your Host ip addrss> -p 5050
 ```
-5. The programe will display the result.
+5. The program will display the result.
 
 
 ## Run Snoopdog with recorded data
-For an user who does not have any of hardware required for SnoopDog,
-We provide a recorded raw EM Signal data to test SnoopDog.
+For users who do not have the required hardware/environment for SnoopDog,
+We provide a recorded raw EMR data to test SnoopDog.
 
 ### Requirements
 - Python 3.12 or later
 
-please follow steps here
+Please follow the steps mentioned here:
 
 1. Download and unzip detector.zip by
 ```bash
