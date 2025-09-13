@@ -74,7 +74,7 @@ SnoopDog\
     
     Source code for detector including detection method in the paper. This program takes raw measurement of EMR signals from the USB device for detection.
     
-    For details, please go to [Run Snoopdog with recorded data](##Run-Snoopdog-with-recorded-data)
+    For details, please go to "Run Snoopdog with recorded data"
 1.  detector.py
     Source code for detector including detection method in the paper. This program requires real-world hardware environment.
 ### For Host PC
