@@ -5,7 +5,8 @@ set -u  # Treat unset variables as an error
 
 REPO_URL="https://github.com/MobiSec-CSE-UTA/SnoopDog.git"
 REPO_DIR="SnoopDog"
-REQUIREMENTS_PATH="$REPO_DIR/artifact/claims/requirements.txt"
+VENV_NAME="Snoopdog"
+REQUIREMENTS_PATH="$REPO_DIR/artifact/claims/claim1/requirements.txt"
 
 echo "[*] Starting installation of requirements for SnoopDog..."
 
@@ -34,6 +35,14 @@ else
     echo "[+] pip3 is already installed."
 fi
 
+# 2.5. Install python3-venv if not already installed
+if ! python3 -m venv --help >/dev/null 2>&1; then
+    echo "[*] python3-venv is not installed. Installing python3-venv..."
+    sudo apt install -y python3-venv
+else
+    echo "[+] python3-venv is already available."
+fi
+
 # 3. Clone the repository if it doesn't already exist
 if [ ! -d "$REPO_DIR" ]; then
     echo "[*] Cloning the SnoopDog repository..."
@@ -42,10 +51,22 @@ else
     echo "[+] Repository directory already exists. Using existing copy."
 fi
 
-# 4. Install Python packages from requirements.txt
+# 4. Create and activate virtual environment
+if [ ! -d "$VENV_NAME" ]; then
+    echo "[*] Creating virtual environment '$VENV_NAME'..."
+    python3 -m venv "$VENV_NAME"
+else
+    echo "[+] Virtual environment '$VENV_NAME' already exists."
+fi
+
+echo "[*] Activating virtual environment..."
+source "$VENV_NAME/bin/activate"
+echo "[+] Virtual environment activated."
+
+# 5. Install Python packages from requirements.txt
 if [ -f "$REQUIREMENTS_PATH" ]; then
-    echo "[*] Installing required Python packages..."
-    pip3 install -r "$REQUIREMENTS_PATH"
+    echo "[*] Installing required Python packages in virtual environment..."
+    pip install -r "$REQUIREMENTS_PATH"
     echo "[+] All packages installed successfully."
 else
     echo "[!] Error: requirements.txt not found at $REQUIREMENTS_PATH"
@@ -54,5 +75,9 @@ fi
 
 echo "[✅] Installation completed successfully!"
 
+echo ""
+echo "To activate the virtual environment in the future, run:"
+echo "source $VENV_NAME/bin/activate"
+echo ""
 echo "For next step, please follow README.md file to finish set up SnoopDog and Host PC"
 echo "Further steps require hardwares and envionment set-up which are not able to be automated."
