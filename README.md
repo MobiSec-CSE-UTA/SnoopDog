@@ -51,15 +51,16 @@ SnoopDog\
 │   └── detector.zip <-- same as detector folder
 │   └── server.zip <-- same as server folder
 ├── claim\
-│   ├── recorded_data\
-│   │   ├── benign1.data
-│   │   ├── benign2.data
-│   │   ├── malicious1.data
-│   │   └── malicious2.data
-│   ├── expected output.txt
-│   ├── requirements.txt
-│   ├── run.sh
-│   └── snoopdog_detector.py
+│   └── claim1\
+│       ├── recorded_data\
+│       │   ├── benign1.data
+│       │   ├── benign2.data
+│       │   ├── malicious1.data
+│       │   └── malicious2.data
+│       ├── expected output.txt
+│       ├── requirements.txt
+│       ├── run.sh
+│       └── snoopdog_detector.py
 ├── infrastructure\
 │   └── colab_link.txt
 └── README.md
