@@ -31,13 +31,42 @@ install_package "git" "git"
 install_package "python3" "python3"
 install_package "python3-pip" "pip3"
 
-# 2.5. Install python3-venv if not already installed
-if ! python3 -m venv --help >/dev/null 2>&1; then
-    echo "[*] python3-venv is not installed. Installing python3-venv..."
+# 2.5. Install python3-venv and python3-dev packages
+echo "[*] Checking for required Python packages..."
+
+# Get Python version
+PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+echo "[*] Detected Python version: $PYTHON_VERSION"
+
+# Install version-specific venv package
+VENV_PACKAGE="python${PYTHON_VERSION}-venv"
+if ! dpkg -l | grep -q "$VENV_PACKAGE"; then
+    echo "[*] $VENV_PACKAGE is not installed. Installing..."
     echo "[!] This requires sudo privileges for system package installation"
-    sudo apt install -y python3-venv
+    sudo apt update
+    sudo apt install -y "$VENV_PACKAGE"
 else
-    echo "[+] python3-venv is already available."
+    echo "[+] $VENV_PACKAGE is already installed."
+fi
+
+# Also install python3-dev for building packages
+DEV_PACKAGE="python${PYTHON_VERSION}-dev"
+if ! dpkg -l | grep -q "$DEV_PACKAGE"; then
+    echo "[*] $DEV_PACKAGE is not installed. Installing..."
+    echo "[!] This requires sudo privileges for system package installation"
+    sudo apt install -y "$DEV_PACKAGE"
+else
+    echo "[+] $DEV_PACKAGE is already installed."
+fi
+
+# Install distutils if needed (Ubuntu 22.04+)
+DISTUTILS_PACKAGE="python${PYTHON_VERSION}-distutils"
+if ! dpkg -l | grep -q "$DISTUTILS_PACKAGE" 2>/dev/null; then
+    echo "[*] $DISTUTILS_PACKAGE is not installed. Installing..."
+    echo "[!] This requires sudo privileges for system package installation"
+    sudo apt install -y "$DISTUTILS_PACKAGE" 2>/dev/null || echo "[!] $DISTUTILS_PACKAGE not available, continuing..."
+else
+    echo "[+] $DISTUTILS_PACKAGE is already installed."
 fi
 
 # 3. Update the current repository to latest version
@@ -51,16 +80,24 @@ else
 fi
 
 # 4. Create and activate virtual environment
-if [ ! -d "$VENV_NAME" ]; then
-    echo "[*] Creating virtual environment '$VENV_NAME'..."
-    python3 -m venv "$VENV_NAME"
-else
-    echo "[+] Virtual environment '$VENV_NAME' already exists."
+if [ -d "$VENV_NAME" ]; then
+    echo "[*] Removing existing virtual environment '$VENV_NAME'..."
+    rm -rf "$VENV_NAME"
 fi
 
-echo "[*] Activating virtual environment..."
+echo "[*] Creating virtual environment '$VENV_NAME'..."
+python3 -m venv "$VENV_NAME" --without-pip
+
+# Install pip manually in the virtual environment
+echo "[*] Installing pip in virtual environment..."
 source "$VENV_NAME/bin/activate"
-echo "[+] Virtual environment activated."
+
+# Download and install pip manually
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py
+rm get-pip.py
+
+echo "[+] Virtual environment created and pip installed successfully."
 
 # 5. Install Python packages from requirements.txt
 if [ -f "$REQUIREMENTS_PATH" ]; then
