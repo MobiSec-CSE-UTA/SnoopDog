@@ -5,7 +5,7 @@ set -e  # Exit immediately on error
 set -u  # Treat unset variables as an error
 
 VENV_NAME="Snoopdog"
-REQUIREMENTS_PATH="artifact/claims/claim1/requirements.txt"
+REQUIREMENTS_PATH="./claims/claim1/requirements.txt"
 
 echo "[*] Starting installation of requirements for SnoopDog..."
 
