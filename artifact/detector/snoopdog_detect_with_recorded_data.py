@@ -1,5 +1,5 @@
 import pickle
-from detector import usbEavesdropperDetector
+from snoopdog_detector import usbEavesdropperDetector
 import argparse
 
 
