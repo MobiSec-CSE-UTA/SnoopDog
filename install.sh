@@ -1,68 +1,53 @@
 #!/bin/bash
-echo "This script requires sudo privileges to install system packages"
-echo "Please run with: sudo ./install.sh or make sure you have sudo access"
+# filepath: d:\USB artifacts evaluation\mobisec_repo\SnoopDog\SnoopDog\install.sh
 
 set -e  # Exit immediately on error
 set -u  # Treat unset variables as an error
 
-REPO_URL="https://github.com/MobiSec-CSE-UTA/SnoopDog.git"
-REPO_DIR="SnoopDog"
 VENV_NAME="Snoopdog"
-REQUIREMENTS_PATH="$REPO_DIR/artifact/claims/claim1/requirements.txt"
+REQUIREMENTS_PATH="artifact/claims/claim1/requirements.txt"
 
 echo "[*] Starting installation of requirements for SnoopDog..."
-echo "[!] Note: This script requires sudo privileges for system package installation"
 
-# Check if user has sudo access
-if ! sudo -n true 2>/dev/null; then
-    echo "[!] This script requires sudo access. Please enter your password when prompted."
-fi
+# Function to check and install system packages
+install_package() {
+    local package=$1
+    local command_check=$2
+    
+    if ! command -v "$command_check" >/dev/null 2>&1; then
+        echo "[*] $package is not installed. Installing $package..."
+        echo "[!] This requires sudo privileges for system package installation"
+        sudo apt update
+        sudo apt install -y "$package"
+    else
+        echo "[+] $package is already installed."
+    fi
+}
 
 # 1. Check if git is installed
-if ! command -v git >/dev/null 2>&1; then
-    echo "[*] git is not installed. Installing git..."
-    sudo apt update
-    sudo apt install -y git
-else
-    echo "[+] git is already installed."
-fi
+install_package "git" "git"
 
 # 2. Check if Python3 and pip3 are installed
-if ! command -v python3 >/dev/null 2>&1; then
-    echo "[*] python3 is not installed. Installing python3..."
-    sudo apt update
-    sudo apt install -y python3
-else
-    echo "[+] python3 is already installed."
-fi
-
-if ! command -v pip3 >/dev/null 2>&1; then
-    echo "[*] pip3 is not installed. Installing pip3..."
-    sudo apt install -y python3-pip
-else
-    echo "[+] pip3 is already installed."
-fi
+install_package "python3" "python3"
+install_package "python3-pip" "pip3"
 
 # 2.5. Install python3-venv if not already installed
 if ! python3 -m venv --help >/dev/null 2>&1; then
     echo "[*] python3-venv is not installed. Installing python3-venv..."
+    echo "[!] This requires sudo privileges for system package installation"
     sudo apt install -y python3-venv
 else
     echo "[+] python3-venv is already available."
 fi
 
-# 3. Update the repository to latest version
-if [ -d "$REPO_DIR" ]; then
-    echo "[*] Updating SnoopDog repository to latest version..."
-    cd "$REPO_DIR"
+# 3. Update the current repository to latest version
+echo "[*] Updating current repository to latest version..."
+if [ -d ".git" ]; then
     git fetch origin
     git pull origin main 2>/dev/null || git pull origin master 2>/dev/null || echo "[!] Could not pull from main/master branch"
-    cd ..
     echo "[+] Repository updated successfully."
 else
-    echo "[*] Repository directory not found. Cloning SnoopDog repository..."
-    git clone "$REPO_URL"
-    echo "[+] Repository cloned successfully."
+    echo "[!] Warning: Not in a git repository. Skipping update."
 fi
 
 # 4. Create and activate virtual environment
@@ -85,6 +70,7 @@ if [ -f "$REQUIREMENTS_PATH" ]; then
     echo "[+] All packages installed successfully."
 else
     echo "[!] Error: requirements.txt not found at $REQUIREMENTS_PATH"
+    echo "[!] Please make sure you're running this script from the SnoopDog root directory"
     exit 1
 fi
 
