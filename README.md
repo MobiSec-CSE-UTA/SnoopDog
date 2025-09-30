@@ -259,6 +259,30 @@ We provide a recorded raw EMR data to test SnoopDog.
 ### Requirements
 - Python 3.12 or later
 
+### Autometic install
+#### Requirements
+- Ubuntu 22.04
+
+1. clone this repo
+2. run install.sh with sudo
+```bash
+cd Snoopdog
+chmod +x 775 ./install.sh
+sudo ./install.sh
+```
+3. activate venv and navigate to the folder for detector
+```bash
+source Snoopdog/bin/activate
+cd ./claims/claim1/
+```
+4. run run.sh
+```bash
+chmod +x ./run.sh
+./run.sh
+```
+
+### Manual install
+
 Please follow the steps mentioned here:
 
 1. Download and unzip detector.zip by
