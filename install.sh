@@ -31,6 +31,9 @@ install_package "git" "git"
 install_package "python3" "python3"
 install_package "python3-pip" "pip3"
 
+# 2.1. Check if curl is installed (needed for pip installation)
+install_package "curl" "curl"
+
 # 2.5. Install python3-venv and python3-dev packages
 echo "[*] Checking for required Python packages..."
 
@@ -86,18 +89,42 @@ if [ -d "$VENV_NAME" ]; then
 fi
 
 echo "[*] Creating virtual environment '$VENV_NAME'..."
-python3 -m venv "$VENV_NAME" --without-pip
 
-# Install pip manually in the virtual environment
-echo "[*] Installing pip in virtual environment..."
-source "$VENV_NAME/bin/activate"
+# Try creating virtual environment with pip first
+if python3 -m venv "$VENV_NAME" 2>/dev/null; then
+    echo "[+] Virtual environment created successfully with pip."
+    source "$VENV_NAME/bin/activate"
+else
+    echo "[*] Creating virtual environment without pip and installing manually..."
+    python3 -m venv "$VENV_NAME" --without-pip
+    source "$VENV_NAME/bin/activate"
+    
+    # Install pip manually in the virtual environment
+    echo "[*] Installing pip in virtual environment..."
+    
+    # Try using curl first, then wget as fallback
+    if command -v curl >/dev/null 2>&1; then
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    elif command -v wget >/dev/null 2>&1; then
+        wget https://bootstrap.pypa.io/get-pip.py
+    else
+        echo "[!] Error: Neither curl nor wget is available. Cannot download pip installer."
+        echo "[!] Please install curl or wget and run the script again."
+        exit 1
+    fi
+    
+    python get-pip.py
+    rm get-pip.py
+    echo "[+] Virtual environment created and pip installed successfully."
+fi
 
-# Download and install pip manually
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python get-pip.py
-rm get-pip.py
+# Verify pip installation
+if ! command -v pip >/dev/null 2>&1; then
+    echo "[!] Error: pip is not available in the virtual environment."
+    exit 1
+fi
 
-echo "[+] Virtual environment created and pip installed successfully."
+echo "[+] Virtual environment is ready with pip."
 
 # 5. Install Python packages from requirements.txt
 if [ -f "$REQUIREMENTS_PATH" ]; then
