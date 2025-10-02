@@ -267,7 +267,7 @@ We provide a recorded raw EMR data to test SnoopDog.
 2. Run install.sh with sudo
 ```bash
 cd Snoopdog
-chmod +x 775 ./install.sh
+chmod +x ./install.sh
 sudo ./install.sh
 ```
 3. Activate venv and navigate to the folder for claim1
