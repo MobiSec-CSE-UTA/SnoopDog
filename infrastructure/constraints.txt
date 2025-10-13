@@ -1,0 +1,13 @@
+documenting infrastructure limitations that prevent full reproduction of certain results.
+ 
+Infrastructure:
+    We would like to reiterate that our system was implemented in the environment specified in our readme.md file.
+    This includes a hardware setup of :
+        Raspberry Pi 4b or later with USB gadget functionality
+        Auxiliary power for Raspberry PI
+        RTL-SDR
+        Near-Field probe
+    and a software setup of Python 3.12 or later, with the libraries of (numpy, scipy, fastdtw, Radio Pi).
+    and a software setup for the Host PC Python with RNDIS driver (if the detector is not recognized).
+    While we strive to promote open source, by including a Google Colab environment to run our results without hardware, replicating the exact environment is necessary to run all experiments.
+    Please contact the authors directly if you have any questions.

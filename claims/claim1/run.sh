@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 
 echo 'For benign device 1'
 echo 'target data file to load = ./recorded_data/benign1.data'
